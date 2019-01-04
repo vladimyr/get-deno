@@ -1,4 +1,4 @@
-# get-deno [![install size](https://badgen.net/packagephobia/install/get-deno)](https://packagephobia.now.sh/result?p=get-deno) [![npm package version](https://badgen.net/npm/v/get-deno)](https://npm.im/get-deno) [![github license](https://badgen.net/github/license/vladimyr/get-deno)](https://github.com/vladimyr/get-deno/blob/master/LICENSE) [![js semistandard style](https://badgen.net/badge/code%20style/semistandard/pink)](https://github.com/Flet/semistandard)
+# get-deno [![build status](https://badgen.net/travis/vladimyr/get-deno/master)](https://travis-ci.com/vladimyr/get-deno) [![install size](https://badgen.net/packagephobia/install/get-deno)](https://packagephobia.now.sh/result?p=get-deno) [![npm package version](https://badgen.net/npm/v/get-deno)](https://npm.im/get-deno) [![github license](https://badgen.net/github/license/vladimyr/get-deno)](https://github.com/vladimyr/get-deno/blob/master/LICENSE) [![js semistandard style](https://badgen.net/badge/code%20style/semistandard/pink)](https://github.com/Flet/semistandard)
 
 >Downloads the latest [Deno](https://deno.land) binary into `$HOME/.deno/bin`.
 
