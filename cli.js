@@ -89,7 +89,13 @@ async function install(version) {
     gauge.show(stats, value);
     gauge.pulse();
   });
-  exitHook(() => unlinkSync(`${binary}.download`));
+  exitHook(() => {
+    try {
+      unlinkSync(`${binary}.download`);
+    } catch (err) {
+      if (err.code !== 'ENOENT') throw err;
+    }
+  });
 
   version = stream.metadata.version.replace(/^v/, '');
   spinner.text = `Downloading ${kleur.bold().cyan(`deno@${version}`)} from ${kleur.gray(stream.metadata.url)}`;
