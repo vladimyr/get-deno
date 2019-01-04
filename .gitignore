@@ -1,0 +1,18 @@
+# deps
+node_modules
+
+# logs
+logs
+*.log
+npm-debug.log*
+
+# editors
+.idea
+*.sublime-*
+
+# build artifacts
+cli.compact.js*
+stats.html
+
+# general
+.DS_Store
