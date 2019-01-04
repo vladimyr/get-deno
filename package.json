@@ -60,6 +60,7 @@
     "minimist": "^1.2.0",
     "minimist-options": "^3.0.2",
     "mississippi": "^3.0.0",
+    "ms": "^2.1.1",
     "ora": "^3.0.0",
     "p-do-whilst": "^0.1.0",
     "pretty-bytes": "^5.1.0",

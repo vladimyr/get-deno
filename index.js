@@ -45,7 +45,7 @@ async function download(version = 'latest', os = platform) {
   else if (type === 'zip') unarchiver = createUnzip();
   else throw new InstallationError(`Unsupported file type: ${filename}`);
   let downloadedSize = 0;
-  const downloadStream = client.stream(url);
+  const downloadStream = client.stream(url, { token: null });
   const outputStream = miss.pipe(downloadStream, unarchiver);
   downloadStream.on('data', buf => {
     downloadedSize += Buffer.byteLength(buf);

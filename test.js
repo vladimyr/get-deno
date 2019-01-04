@@ -1,20 +1,16 @@
 'use strict';
 
-const { Writable } = require('stream');
 const client = require('./');
+const miss = require('mississippi');
+const ms = require('ms');
+const pipe = require('util').promisify(miss.pipe);
 const pkg = require('./package.json');
 const test = require('tape');
 
-const values = obj => Object.keys(obj).map(it => obj[it]);
+const timeout = ms('5m');
 
-class Sink extends Writable {
-  _write(_, __, callback) {
-    callback();
-  }
-  _writev(_, callback) {
-    callback();
-  }
-}
+const createSink = () => miss.to((_, __, cb) => cb());
+const values = obj => Object.keys(obj).map(it => obj[it]);
 
 test('Fetch releases from official repo', async t => {
   const releases = await client.listReleases();
@@ -35,24 +31,20 @@ test('Fetch latest release', async t => {
     `contains expected artifacts: ${filenames.join(', ')}`);
 });
 
-test.skip('Download latest release (`linux`)', createDownloadTest('linux'));
-test.skip('Download latest release (`macOS`)', createDownloadTest('darwin'));
-test.skip('Download latest release (`windows`)', createDownloadTest('win32'));
+test('Download latest release (`linux`)', { timeout }, createDownloadTest('linux'));
+test('Download latest release (`macOS`)', { timeout }, createDownloadTest('darwin'));
+test('Download latest release (`windows`)', { timeout }, createDownloadTest('win32'));
 
 function createDownloadTest(platform) {
   return async t => {
     let stream;
     try {
       stream = await client.download('latest', platform);
+      await pipe(stream, createSink());
+      t.pass('downloaded successfully');
+      t.end();
     } catch (err) {
       return t.end(err);
     }
-    stream
-      .once('error', err => t.end(err))
-      .once('finish', () => {
-        t.pass('downloaded successfully');
-        t.end();
-      })
-      .pipe(new Sink());
   };
 }
