@@ -35,9 +35,9 @@ test('Fetch latest release', async t => {
     `contains expected artifacts: ${filenames.join(', ')}`);
 });
 
-test('Download latest release (`linux`)', createDownloadTest('linux'));
-test('Download latest release (`macOS`)', createDownloadTest('darwin'));
-test('Download latest release (`windows`)', createDownloadTest('win32'));
+test.skip('Download latest release (`linux`)', createDownloadTest('linux'));
+test.skip('Download latest release (`macOS`)', createDownloadTest('darwin'));
+test.skip('Download latest release (`windows`)', createDownloadTest('win32'));
 
 function createDownloadTest(platform) {
   return async t => {
