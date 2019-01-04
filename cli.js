@@ -1,9 +1,10 @@
 'use strict';
 
 const { promisify } = require('util');
-const { createWriteStream, renameSync } = require('fs');
+const { createWriteStream, renameSync, unlinkSync } = require('fs');
 const { download, listReleases, InstallationError } = require('./');
 const debug = require('debug')('cli');
+const exitHook = require('exit-hook');
 const Gauge = require('gauge');
 const kleur = require('kleur');
 const makeDir = require('make-dir');
@@ -88,6 +89,7 @@ async function install(version) {
     gauge.show(stats, value);
     gauge.pulse();
   });
+  exitHook(() => unlinkSync(`${binary}.download`));
 
   version = stream.metadata.version.replace(/^v/, '');
   spinner.text = `Downloading ${kleur.bold().cyan(`deno@${version}`)} from ${kleur.gray(stream.metadata.url)}`;
