@@ -1,15 +1,10 @@
 'use strict';
 
 const client = require('./');
-const miss = require('mississippi');
 const ms = require('ms');
-const pipe = require('util').promisify(miss.pipe);
 const pkg = require('./package.json');
 const test = require('tape');
 
-const timeout = ms('5m');
-
-const createSink = () => miss.to((_, __, cb) => cb());
 const values = obj => Object.keys(obj).map(it => obj[it]);
 
 test('Fetch releases from official repo', async t => {
@@ -31,20 +26,42 @@ test('Fetch latest release', async t => {
     `contains expected artifacts: ${filenames.join(', ')}`);
 });
 
-test('Download latest release (`linux`)', { timeout }, createDownloadTest('linux'));
-test('Download latest release (`macOS`)', { timeout }, createDownloadTest('darwin'));
-test('Download latest release (`windows`)', { timeout }, createDownloadTest('win32'));
+test('Download latest release (`linux`)', ...createDownloadTest(
+  'linux',
+  magic => magic.equals(Buffer.from([0x7f, /* E */0x45, /* L */0x4c, /* F */0x46])),
+  { timeout: ms('1m') }
+));
 
-function createDownloadTest(platform) {
-  return async t => {
+test('Download latest release (`macOS`)', ...createDownloadTest(
+  'darwin',
+  magic => magic.equals(Buffer.from([0xcf, 0xfa, 0xed, 0xfe])),
+  { timeout: ms('1m') }
+));
+
+test.only('Download latest release (`windows`)', ...createDownloadTest(
+  'win32',
+  magic => magic.slice(0, 2).equals(Buffer.from([0x4d/* M */, /* Z */0x5a])),
+  { timeout: ms('1m') }
+));
+
+function createDownloadTest(platform, predicate, options = {}) {
+  return [options, async t => {
     let stream;
     try {
       stream = await client.download('latest', platform);
-      await pipe(stream, createSink());
-      t.pass('downloaded successfully');
-      t.end();
+      stream.on('data', chunk => {
+        chunk = chunk.slice(0, 4);
+        stream.destroy();
+        t.comment(`magic: ${formatBuffer(chunk)}`);
+        t.assert(predicate(chunk), 'downloaded successfully');
+        t.end();
+      });
     } catch (err) {
       return t.end(err);
     }
-  };
+  }];
+}
+
+function formatBuffer(buf) {
+  return Array.from(buf).map(it => it.toString(16).padStart(2, 0)).join(' ');
 }
