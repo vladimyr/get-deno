@@ -1,7 +1,6 @@
 import { builtinModules } from 'module';
 import commonjs from 'rollup-plugin-commonjs';
 import json from 'rollup-plugin-json';
-import path from 'path';
 import postprocess from 'rollup-plugin-postprocess';
 import replace from 'rollup-plugin-re';
 import resolve from 'rollup-plugin-node-resolve';
@@ -27,13 +26,7 @@ export default {
       }]
     }),
     resolve(),
-    commonjs({
-      sourceMap,
-      ignore(id) {
-        return /package\.json/.test(id) &&
-          path.resolve(id) === path.resolve(__dirname, './package.json');
-      }
-    }),
+    commonjs({ sourceMap }),
     json(),
     postprocess([
       [/require\('readable-stream'\)/, `require('stream')`]
