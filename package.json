@@ -19,7 +19,8 @@
       "win32": "deno_win_x64.zip",
       "darwin": "deno_osx_x64.gz",
       "linux": "deno_linux_x64.gz"
-    }
+    },
+    "umask": 755
   },
   "keywords": [
     "deno",

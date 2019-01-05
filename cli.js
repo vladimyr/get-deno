@@ -102,7 +102,7 @@ async function install(version) {
   spinner.stopAndPersist({ symbol: supportsEmoji && '📦 ' });
 
   const binary = path.join(dest, isWindows() ? 'deno.exe' : 'deno');
-  await pipe(stream, createWriteStream(`${binary}.download`, { mode: 744 }));
+  await pipe(stream, createWriteStream(`${binary}.download`, { mode: pkg.config.umask }));
   gauge.hide();
   clearSpinner(spinner);
 
