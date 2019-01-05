@@ -28,19 +28,19 @@ test('Fetch latest release', async t => {
 
 test('Download latest release (`linux`)', ...createDownloadTest(
   'linux',
-  magic => magic.equals(Buffer.from([0x7f, /* E */0x45, /* L */0x4c, /* F */0x46])),
+  magic => magic.equals(Buffer.from('\x7FELF')),
   { timeout: ms('1m') }
 ));
 
 test('Download latest release (`macOS`)', ...createDownloadTest(
   'darwin',
-  magic => magic.equals(Buffer.from([0xcf, 0xfa, 0xed, 0xfe])),
+  magic => magic.equals(Buffer.from('\xCF\xFA\xED\xFE')),
   { timeout: ms('1m') }
 ));
 
 test.only('Download latest release (`windows`)', ...createDownloadTest(
   'win32',
-  magic => magic.slice(0, 2).equals(Buffer.from([0x4d/* M */, /* Z */0x5a])),
+  magic => magic.slice(0, 2).equals(Buffer.from('MZ')),
   { timeout: ms('1m') }
 ));
 

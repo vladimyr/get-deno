@@ -1,10 +1,13 @@
-import replace from 'rollup-plugin-re';
-import resolve from 'rollup-plugin-node-resolve';
+import { builtinModules } from 'module';
 import commonjs from 'rollup-plugin-commonjs';
 import json from 'rollup-plugin-json';
+import path from 'path';
 import postprocess from 'rollup-plugin-postprocess';
+import replace from 'rollup-plugin-re';
+import resolve from 'rollup-plugin-node-resolve';
 import visualizer from 'rollup-plugin-visualizer';
 
+const external = builtinModules.concat('readable-stream');
 const sourceMap = true;
 
 export default {
@@ -15,7 +18,7 @@ export default {
     banner: '#!/usr/bin/env node',
     sourcemap: sourceMap
   },
-  external: require('module').builtinModules.concat('readable-stream'),
+  external,
   plugins: [
     replace({
       patterns: [{
@@ -24,7 +27,13 @@ export default {
       }]
     }),
     resolve(),
-    commonjs({ sourceMap }),
+    commonjs({
+      sourceMap,
+      ignore(id) {
+        return /package\.json/.test(id) &&
+          path.resolve(id) === path.resolve(__dirname, './package.json');
+      }
+    }),
     json(),
     postprocess([
       [/require\('readable-stream'\)/, `require('stream')`]
