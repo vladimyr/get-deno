@@ -1,10 +1,10 @@
 'use strict';
 
 const { promisify } = require('util');
-const { createWriteStream, renameSync, unlinkSync } = require('fs');
 const { download, listReleases, InstallationError } = require('./');
 const debug = require('debug')('cli');
 const exitHook = require('exit-hook');
+const fs = require('fs');
 const Gauge = require('gauge');
 const kleur = require('kleur');
 const makeDir = require('make-dir');
@@ -14,6 +14,7 @@ const path = require('path');
 const pkg = require('./package.json');
 const prettyBytes = require('pretty-bytes');
 const semver = require('semver');
+const shellProfile = require('shell-profile');
 const spinner = require('ora')();
 
 kleur.enabled = Boolean(process.stdout.isTTY);
@@ -49,6 +50,18 @@ const help = `
   Homepage:     ${kleur.green(pkg.homepage)}
   Report issue: ${kleur.green(pkg.bugs.url)}
 `;
+
+const profileUpdateWarning = () => `
+Unable to update your shell profile.
+Please add following line manually:
+
+${supportsEmoji ? '👉  ' : '$ '}${kleur.bold('export PATH=$HOME/.deno/bin:$PATH')}`.trim();
+
+const profileUpdateSuccess = profile => `
+Shell profile ${kleur.gray(path.basename(profile))} successfully updated!
+Reload your terminal session using:
+
+${supportsEmoji ? '👉  ' : '$ '}${kleur.bold(`source ~/${path.basename(profile)}`)}`.trim();
 
 program(argv._, argv).catch(err => {
   spinner.stop().clear();
@@ -91,7 +104,7 @@ async function install(version) {
   });
   exitHook(() => {
     try {
-      unlinkSync(`${binary}.download`);
+      fs.unlinkSync(`${binary}.download`);
     } catch (err) {
       if (err.code !== 'ENOENT') throw err;
     }
@@ -102,12 +115,23 @@ async function install(version) {
   spinner.stopAndPersist({ symbol: supportsEmoji && '📦 ' });
 
   const binary = path.join(dest, isWindows() ? 'deno.exe' : 'deno');
-  await pipe(stream, createWriteStream(`${binary}.download`, { mode: pkg.config.umask }));
+  await pipe(stream, fs.createWriteStream(`${binary}.download`, { mode: pkg.config.umask }));
   gauge.hide();
   clearSpinner(spinner);
 
-  renameSync(`${binary}.download`, binary);
+  fs.renameSync(`${binary}.download`, binary);
   spinner.succeed(`${kleur.bold().cyan(`deno@${version}`)} is successfully installed!`);
+
+  if (isWindows()) return;
+  const profile = shellProfile();
+  if (!profile) return spinner.warn(profileUpdateWarning());
+
+  const code = `\n# ${pkg.name}\nexport PATH=$HOME/.deno/bin:$PATH\n`;
+  const contents = fs.readFileSync(profile, 'utf-8');
+  if (contents.includes(code)) return;
+
+  fs.appendFileSync(profile, code);
+  spinner.succeed(profileUpdateSuccess(profile));
 }
 
 async function printReleases(range) {
