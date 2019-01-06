@@ -73,7 +73,7 @@
     "rollup-plugin-re": "^1.0.7",
     "rollup-plugin-visualizer": "^0.9.2",
     "semver": "^5.6.0",
-    "shell-profile": "^1.0.0",
+    "shell-profile": "^1.0.2",
     "tap-spec": "^5.0.0",
     "tape": "^4.9.2",
     "yauzl": "^2.10.0"
