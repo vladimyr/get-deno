@@ -34,7 +34,7 @@ test('Download latest release (`linux`)', ...createDownloadTest(
 
 test('Download latest release (`macOS`)', ...createDownloadTest(
   'darwin',
-  magic => magic.equals(Buffer.from('\xCF\xFA\xED\xFE')),
+  magic => magic.equals(Buffer.from('CFFAEDFE', 'hex')),
   { timeout: ms('1m') }
 ));
 
