@@ -38,7 +38,7 @@ test('Download latest release (`macOS`)', ...createDownloadTest(
   { timeout: ms('1m') }
 ));
 
-test.only('Download latest release (`windows`)', ...createDownloadTest(
+test('Download latest release (`windows`)', ...createDownloadTest(
   'win32',
   magic => magic.slice(0, 2).equals(Buffer.from('MZ')),
   { timeout: ms('1m') }
