@@ -63,7 +63,7 @@
     "mississippi": "^3.0.0",
     "ms": "^2.1.1",
     "ora": "^3.0.0",
-    "p-do-whilst": "^0.1.0",
+    "p-do-whilst": "^1.0.0",
     "pretty-bytes": "^5.1.0",
     "rollup": "^1.1.0",
     "rollup-plugin-commonjs": "^9.2.0",
