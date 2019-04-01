@@ -57,7 +57,7 @@
     "gh-got": "^8.1.0",
     "github-parse-link": "^1.1.1",
     "kleur": "^3.0.1",
-    "make-dir": "^2.0.0",
+    "make-dir": "^3.0.0",
     "minimist": "^1.2.0",
     "minimist-options": "^4.0.0",
     "mississippi": "^4.0.0",
