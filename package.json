@@ -1,6 +1,6 @@
 {
   "name": "get-deno",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "deno installation script for npx",
   "bin": "cli.compact.js",
   "files": [
