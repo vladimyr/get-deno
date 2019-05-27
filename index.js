@@ -1,7 +1,7 @@
 'use strict';
 
 const { promisify } = require('util');
-const { extname } = require('path');
+const { extname, join } = require('path');
 const debug = require('debug')('http');
 const miss = require('mississippi');
 const parseLink = require('github-parse-link');
@@ -11,7 +11,7 @@ const platform = require('os').platform();
 const yauzl = require('yauzl');
 const zlib = require('zlib');
 
-const ua = `${pkg.name}/${pkg.version}`;
+const ua = join(pkg.name, pkg.version);
 const client = require('gh-got').extend({
   headers: { 'user-agent': ua }
 });
@@ -70,9 +70,9 @@ async function fetchRelease(version = 'latest') {
 
 async function listReleases(version) {
   const releases = [];
-  let url = `/repos/${pkg.config.repo}/releases`;
-  if (version === 'latest') url += '/latest';
-  else if (version) url += `/tags/${version}`;
+  let url = join('/repos/', pkg.config.repo, '/releases');
+  if (version === 'latest') url = join(url, '/latest');
+  else if (version) url = join(url, '/tags/', version);
   let finished = false;
   await pDoWhilst(async () => {
     debug('fetch releases: url=%s', url);
