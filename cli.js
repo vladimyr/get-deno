@@ -31,9 +31,9 @@ const pipe = promisify(miss.pipe);
 const options = require('minimist-options')({
   help: { type: 'boolean', alias: 'h' },
   version: { type: 'boolean', alias: 'v' },
-  'list-releases': { type: 'boolean', alias: 'l' }
+  'list-releases': { type: 'boolean', alias: 'l' },
+  unknown: option => fail(`Error: Unknown option \`${option}\``, -1)
 });
-options.unknown = option => fail(`Error: Unknown option \`${option}\``, -1);
 const argv = require('minimist')(process.argv.slice(2), options);
 
 const help = `
