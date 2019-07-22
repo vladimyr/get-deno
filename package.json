@@ -46,7 +46,7 @@
   "devDependencies": {
     "debug": "^4.1.1",
     "eslint": "^6.0.0",
-    "eslint-config-semistandard": "^13.0.0",
+    "eslint-config-semistandard": "^14.0.0",
     "eslint-config-standard": "^13.0.0",
     "eslint-plugin-import": "^2.17.3",
     "eslint-plugin-node": "^9.1.0",
