@@ -22,14 +22,14 @@ export default {
     replace({
       patterns: [{
         test: /require\('debug'\)/g,
-        replace: `require('debug/src/node')`
+        replace: "require('debug/src/node')"
       }]
     }),
     resolve(),
     commonjs({ sourceMap }),
     json(),
     postprocess([
-      [/require\('readable-stream'\)/, `require('stream')`]
+      [/require\('readable-stream'\)/, "require('stream')"]
     ]),
     visualizer()
   ]
