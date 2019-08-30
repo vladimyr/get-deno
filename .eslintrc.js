@@ -1,10 +1,13 @@
+'use strict';
+
+const config = require('@vladimyr/eslint-config');
+const [esmConfig] = config.overrides;
+
+
 module.exports = {
-  extends: 'semistandard',
-  rules: {
-    'prefer-const': 'error',
-    'space-before-function-paren': ['error', {
-      anonymous: 'always',
-      named: 'never'
-    }]
-  }
+  extends: '@vladimyr',
+  overrides: [{
+    ...esmConfig,
+    files: ['rollup.config.js']
+  }]
 };
