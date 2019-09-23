@@ -63,7 +63,7 @@
     "minimist-options": "^4.0.1",
     "mississippi": "^4.0.0",
     "ms": "^2.1.2",
-    "ora": "^3.4.0",
+    "ora": "^4.0.0",
     "p-do-whilst": "^1.1.0",
     "pretty-bytes": "^5.3.0",
     "rollup": "^1.20.3",
