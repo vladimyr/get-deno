@@ -21,9 +21,10 @@ test('Fetch latest release', async t => {
   ]);
   t.plan(2);
   t.deepEqual(expected, actual, `latest release: ${expected.tag}`);
-  const filenames = values(pkg.config.artifacts);
-  t.deepEqual(Array.from(actual.files.keys()).sort(), filenames.sort(),
-    `contains expected artifacts: ${filenames.join(', ')}`);
+  const expectedFiles = values(pkg.config.artifacts);
+  const actualFiles = new Set(actual.files.keys());
+  t.ok(expectedFiles.every(file => actualFiles.has(file)),
+    `contains expected artifacts: ${expectedFiles.join(', ')}`);
 });
 
 test('Download latest release (`linux`)', ...createDownloadTest(
