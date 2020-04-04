@@ -1,6 +1,6 @@
 {
   "name": "get-deno",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "deno installation script for npx",
   "keywords": [
     "deno",
