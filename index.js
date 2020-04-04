@@ -33,8 +33,9 @@ async function download(version = 'latest', os = platform) {
   const release = await fetchRelease(version);
   debug('found release: %j', release);
   debug('available artifacts: %j', Array.from(release.files.keys()));
-  const filename = pkg.config.artifacts[os];
-  if (!filename || !release.files.has(filename)) {
+  const filenames = castArray(pkg.config.artifacts[os] || []);
+  const filename = filenames.find(it => release.files.has(it));
+  if (!filename) {
     throw new InstallationError(`Unsupported platform: ${platform}`);
   }
   const type = extname(filename).replace(/^\./, '');
