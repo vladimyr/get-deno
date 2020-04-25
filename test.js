@@ -34,38 +34,38 @@ test('Fetch latest release', async t => {
 
 test('Download latest release (`linux`)', ...createDownloadTest(
   'linux',
-  magic => magic.equals(Buffer.from('\x7FELF')),
-  { timeout: ms('1m') }
+  magic => magic.equals(Buffer.from('\x7FELF'))
 ));
 
 test('Download latest release (`macOS`)', ...createDownloadTest(
   'darwin',
-  magic => magic.equals(Buffer.from('CFFAEDFE', 'hex')),
-  { timeout: ms('1m') }
+  magic => magic.equals(Buffer.from('CFFAEDFE', 'hex'))
 ));
 
 test('Download latest release (`windows`)', ...createDownloadTest(
   'win32',
-  magic => magic.slice(0, 2).equals(Buffer.from('MZ')),
-  { timeout: ms('1m') }
+  magic => magic.slice(0, 2).equals(Buffer.from('MZ'))
 ));
 
 function createDownloadTest(platform, predicate, options = {}) {
+  options.timeout = options.timeout || ms('1m');
   return [options, async t => {
-    let stream;
-    try {
-      stream = await client.download('latest', platform);
-      stream.on('data', chunk => {
-        chunk = chunk.slice(0, 4);
-        stream.destroy();
-        t.comment(`magic: ${formatBuffer(chunk)}`);
-        t.assert(predicate(chunk), 'downloaded successfully');
-        t.end();
-      });
-    } catch (err) {
-      return t.end(err);
-    }
+    const stream = await client.download('latest', platform);
+    const magic = await readChunk(stream, { length: 4 });
+    t.comment(`magic: ${formatBuffer(magic)}`);
+    t.assert(predicate(magic), 'downloaded successfully');
   }];
+}
+
+function readChunk(stream, { length }) {
+  return new Promise((resolve, reject) => {
+    stream.on('error', reject);
+    stream.on('data', chunk => {
+      const data = chunk.slice(0, length);
+      stream.destroy();
+      resolve(data);
+    });
+  });
 }
 
 function formatBuffer(buf) {
