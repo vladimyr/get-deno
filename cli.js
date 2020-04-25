@@ -146,7 +146,7 @@ async function printReleases(range) {
   const matches = releases.reduce((acc, it) => {
     const version = semver.coerce(it.tag);
     if (!semver.satisfies(version, range)) return acc;
-    acc.push([it.tag.padEnd(10), kleur.gray(formatDate(it.publishedAt))].join(''));
+    acc.push([it.tag.padEnd(12), kleur.gray(formatDate(it.publishedAt))].join(''));
     return acc;
   }, []);
   if (matches.length <= 0) {

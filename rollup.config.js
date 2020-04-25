@@ -1,15 +1,15 @@
+import alias from '@rollup/plugin-alias';
 import { builtinModules } from 'module';
-import commonjs from 'rollup-plugin-commonjs';
-import json from 'rollup-plugin-json';
-import postprocess from 'rollup-plugin-postprocess';
-import replace from 'rollup-plugin-re';
-import resolve from 'rollup-plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json';
+import replace from '@rollup/plugin-replace';
+import resolve from '@rollup/plugin-node-resolve';
 import visualizer from 'rollup-plugin-visualizer';
 
-const external = builtinModules.concat('readable-stream');
 const sourceMap = true;
 
-export default {
+/** @type {import('rollup').RollupOptions} */
+const config = {
   input: 'cli.js',
   output: {
     file: 'cli.compact.js',
@@ -17,20 +17,19 @@ export default {
     banner: '#!/usr/bin/env node',
     sourcemap: sourceMap
   },
-  external,
+  external: builtinModules,
   plugins: [
+    alias({
+      debug: 'debug/src/node'
+    }),
     replace({
-      patterns: [{
-        test: /require\('debug'\)/g,
-        replace: "require('debug/src/node')"
-      }]
+      "process.env.READABLE_STREAM === 'disable' && Stream": JSON.stringify(true)
     }),
     resolve(),
     commonjs({ sourceMap }),
     json(),
-    postprocess([
-      [/require\('readable-stream'\)/, "require('stream')"]
-    ]),
     visualizer()
   ]
 };
+
+export default config;

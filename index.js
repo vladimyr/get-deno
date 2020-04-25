@@ -70,10 +70,14 @@ async function fetchRelease(version = 'latest') {
 }
 
 async function listReleases(version) {
-  const releases = [];
   let url = join('/repos/', pkg.config.repo, '/releases');
-  if (version === 'latest') url = join(url, '/latest');
-  else if (version) url = join(url, '/tags/', version);
+  if (version) {
+    url = join(...[url, '/tags' && version !== 'latest', version].filter(Boolean));
+    debug('fetch release: url=%s', url);
+    const resp = await client.get(url);
+    return castArray(processRelease(resp.body));
+  }
+  const releases = [];
   let finished = false;
   await pDoWhilst(async () => {
     debug('fetch releases: url=%s', url);
