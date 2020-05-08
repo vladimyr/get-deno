@@ -55,7 +55,7 @@
   "devDependencies": {
     "@vladimyr/eslint-config": "^1.1.1",
     "debug": "^4.1.1",
-    "eslint": "^6.3.0",
+    "eslint": "^7.0.0",
     "eslint-config-semistandard": "^15.0.0",
     "eslint-config-standard": "^14.1.0",
     "eslint-plugin-import": "^2.18.2",
