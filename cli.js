@@ -32,7 +32,7 @@ const options = require('minimist-options')({
   help: { type: 'boolean', alias: 'h' },
   version: { type: 'boolean', alias: 'v' },
   'list-releases': { type: 'boolean', alias: 'l' },
-  unknown: option => fail(`Error: Unknown option \`${option}\``, -1)
+  // unknown: option => fail(`Error: Unknown option \`${option}\``, -1)
 });
 const argv = require('minimist')(process.argv.slice(2), options);
 

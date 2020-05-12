@@ -40,6 +40,7 @@
         "deno-x86_64-pc-windows-msvc.zip"
       ],
       "darwin": [
+        "deno_mac_x64.gz",
         "deno_osx_x64.gz",
         "deno-x86_64-apple-darwin.zip"
       ],
