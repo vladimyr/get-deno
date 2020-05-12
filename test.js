@@ -32,6 +32,11 @@ test('Fetch latest release', async t => {
   );
 });
 
+test('Fetch release v0.1.0', ...createPreflightTest('v0.1.0'));
+test('Fetch release v0.35.0', ...createPreflightTest('v0.35.0'));
+test('Fetch release v0.37.0', ...createPreflightTest('v0.37.0'));
+test('Fetch release v0.39.0', ...createPreflightTest('v0.39.0'));
+
 test('Download latest release (`linux`)', ...createDownloadTest(
   'linux',
   magic => magic.equals(Buffer.from('\x7FELF'))
@@ -46,6 +51,23 @@ test('Download latest release (`windows`)', ...createDownloadTest(
   'win32',
   magic => magic.slice(0, 2).equals(Buffer.from('MZ'))
 ));
+
+function createPreflightTest(version, options = {}) {
+  return [options, async t => {
+    const { files } = await client.fetchRelease(version);
+    t.plan(1);
+    const fileGroups = values(pkg.config.artifacts);
+    const actualFiles = new Set(files.keys());
+    t.comment(`available artifacts: ${Array.from(actualFiles).join(', ')}`);
+    const expectedFiles = new Set();
+    t.ok(
+      fileGroups.every(group => group.some(file => {
+        return actualFiles.has(file) && expectedFiles.add(file);
+      })),
+      `contains expected artifacts: ${Array.from(expectedFiles).join(', ')}`
+    );
+  }];
+}
 
 function createDownloadTest(platform, predicate, options = {}) {
   options.timeout = options.timeout || ms('1m');
