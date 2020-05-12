@@ -72,7 +72,7 @@ async function fetchRelease(version = 'latest') {
 async function listReleases(version) {
   let url = join('/repos/', pkg.config.repo, '/releases');
   if (version) {
-    url = join(...[url, '/tags' && version !== 'latest', version].filter(Boolean));
+    url = join(...[url, version !== 'latest' && '/tags', version].filter(Boolean));
     debug('fetch release: url=%s', url);
     const resp = await client.get(url);
     return castArray(processRelease(resp.body));
